@@ -172,3 +172,6 @@ cython_debug/
 
 # Log folders
 logs/
+
+# Local configuration files
+*.local*

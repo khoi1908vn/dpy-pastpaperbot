@@ -6,12 +6,12 @@ from discord.app_commands import command, describe, autocomplete
 # from discord.app_commands import Choice
 
 import logging; from logger import create_console_handler, create_file_handler
-from main import ExampleBot
+from main import PPBdpy
 # import asyncio, aiohttp
 # import time
 
 class ExampleCog(Cog):
-    def __init__(self, bot: ExampleBot):
+    def __init__(self, bot: PPBdpy):
         self.bot = bot
         self.setup_log()
     def setup_log(self):
@@ -27,5 +27,5 @@ class ExampleCog(Cog):
     async def example(self, interaction):
         raise NotImplementedError
 
-async def setup(bot: ExampleBot):
+async def setup(bot: PPBdpy):
     await bot.add_cog(ExampleCog(bot))

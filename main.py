@@ -1,3 +1,7 @@
+"""
+ENTRYPOINT FILE
+"""
+
 from discord.ext.commands import Bot
 from discord.ext.commands import when_mentioned_or
 from discord.app_commands import CommandTree
@@ -7,6 +11,7 @@ from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 # File imports
 import logging; from logger import create_console_handler, create_file_handler
+from google import genai
 
 class Constants:
     BOT_TOKEN: str
@@ -15,12 +20,13 @@ class Constants:
     #CLIENT_ID: str
     #CLIENT_SECRET: str
     MONGO_URI: str
+    GEMINI_API_KEY: str
 
 class ExampleCommandTree(CommandTree):
     async def interaction_check(self, interaction):
-        bot = interaction.client
-        return interaction.user.id in bot.owner_ids
-class ExampleBot(Bot):
+        #bot = interaction.client
+        return True # ALLOW ALL INTERACTIONS
+class PPBdpy(Bot):
     def __init__(self):
         self.load_constant()
         super().__init__(
@@ -40,6 +46,8 @@ class ExampleBot(Bot):
         #self.const.CLIENT_SECRET = os.getenv('CLIENT_SECRET')
         # API Constants
         self.const.MONGO_URI = os.getenv('MONGO_URI')
+        self.const.GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+        
     def run(self):
         super().run(self.const.BOT_TOKEN, log_handler=None)
     def setup_log(self):
@@ -68,8 +76,11 @@ class ExampleBot(Bot):
         # --- PRE-LOAD DATABASE ---
         self.logger.info("Pre-loading database...")
         self.db = AsyncIOMotorClient(self.const.MONGO_URI)
-        return
-    async def on_ready(self):
+        # --- SETUP API ---
+        self.logger.info("Setting up APIs...")
+        self.logger.info(f"Setting up Google AI... Using API key ...{self.const.GEMINI_API_KEY[-3:]}")
+        self.gemini = genai.Client(api_key=self.const.GEMINI_API_KEY).aio
+
         self.logger.info(f"Bot is ready. {self.user.name} Joined {len(self.guilds)} guilds.")
 
     async def on_command_error(self, context, exception):
@@ -81,5 +92,5 @@ class ExampleBot(Bot):
 
 if __name__ == '__main__':
     load_dotenv() # testing onli eheheh
-    bot = ExampleBot()
+    bot = PPBdpy()
     bot.run()
