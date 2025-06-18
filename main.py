@@ -81,6 +81,7 @@ class PPBdpy(Bot):
         self.logger.info(f"Setting up Google AI... Using API key ...{self.const.GEMINI_API_KEY[-3:]}")
         self.gemini = genai.Client(api_key=self.const.GEMINI_API_KEY).aio
 
+    async def on_ready(self):
         self.logger.info(f"Bot is ready. {self.user.name} Joined {len(self.guilds)} guilds.")
 
     async def on_command_error(self, context, exception):
